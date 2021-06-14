@@ -1,4 +1,4 @@
-# SLAM
+# Drone SLAM
 Application of SLAM (Simultaneous Localization and Mapping) for hobby-grade RC quadcopters.
 
 
