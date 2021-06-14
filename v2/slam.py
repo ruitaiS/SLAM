@@ -6,7 +6,6 @@ orb = cv2.ORB_create()
 print(dir(orb))
 
 def process_frame(frame):
-    cv2.imshow("image", frame)
 
     #detectAndCompute() -> list of keypoints, list of descriptors
     #https://docs.opencv.org/3.4/d0/d13/classcv_1_1Feature2D.html
@@ -26,6 +25,7 @@ def process_frame(frame):
         print((u,v))
         cv2.circle(frame, (u,v), radius=3, color=(0,255,0), thickness=-1)
 
+    cv2.imshow("image", frame)
 
 if __name__ == "__main__" :
     print("test")
