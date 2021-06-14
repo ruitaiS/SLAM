@@ -17,7 +17,7 @@ def process_frame(frame):
     #has tuple 
     #https://docs.opencv.org/3.4/dc/d84/group__core__basic.html#ga7d080aa40de011e4410bca63385ffe2a
 
-    kp, des = orb.detectAndCompute(frame, None)
+    kp = orb.detect(frame, None)
     for p in kp:
         #p is a tuple
         #round coords to nearest int and then draw
@@ -25,17 +25,19 @@ def process_frame(frame):
         print((u,v))
         cv2.circle(frame, (u,v), radius=3, color=(0,255,0), thickness=-1)
 
-    cv2.imshow("image", frame)
 
 if __name__ == "__main__" :
     print("test")
     fileName = 'fpv.avi'
 
-    cap = cv2.VideoCapture(fileName)
+    #VideoCapture(fileName) for use on pre-recorded video
+    #VideoCapture(0) pulls from webcam
+    cap = cv2.VideoCapture(0)
     while cap.isOpened():
         ret, frame = cap.read()
         if ret == True:
             process_frame(frame)
+            cv2.imshow("image", frame)
             cv2.waitKey(1)
         else:
             cap.release()
