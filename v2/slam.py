@@ -8,11 +8,11 @@ class FeatureExtractor(object):
     #Contains different methods for extracting keypoints from an img
 
     def __init__(self):
-        self.orb = cv2.ORB_create(1000)
+        self.orb = cv2.ORB_create(nfeatures = 100)
 
         #Used for gridExtract
-        self.GX = 50 # X dim of grid square
-        self.GY = 50 # Y dim of grid square
+        self.GX = 100 # X dim of grid square
+        self.GY = 100 # Y dim of grid square
 
 
     #Subdivides image into grid and extracts keypoints from each
@@ -72,7 +72,7 @@ def process_frame(frame):
 if __name__ == "__main__" :
     #VideoCapture(fileName) for use on pre-recorded video
     #VideoCapture(0) pulls from webcam
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture("fpv2.avi")
     while cap.isOpened():
         ret, frame = cap.read()
         if ret == True:
