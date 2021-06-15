@@ -11,19 +11,25 @@ class FeatureExtractor(object):
         self.orb = cv2.ORB_create(1000)
 
         #Used for gridExtract
-        self.GX = 16 # grid width
-        self.GY = 16 # grid height
+        self.GX = 50 # X dim of grid square
+        self.GY = 50 # Y dim of grid square
 
 
     #Subdivides image into grid and extracts keypoints from each
     def gridExtract(self, img):
         rkp = [] #returned keypoints
-        for ry in range(0, img.shape[0], img.shape[0]//self.GY):
-            for rx in range(0, img.shape[1], img.shape[1]//self.GX):
+
+        print("Img X: " + str(img.shape[0]) + "Img Y: " + str(img.shape[1]))
+
+        for ry in range(0, img.shape[0], self.GY):
+            for rx in range(0, img.shape[1], self.GX):
                 gridSection = img[ry:ry+self.GY, rx:rx+self.GX]
+                print("Grid X Origin: " + str(rx) + "Grid Y Origin: " + str(ry))
+                print("Grid X: " + str(gridSection.shape[0]) + "Grid Y: " + str(gridSection.shape[1]))
+
                 #print(type(gridSection))
                 kp = self.orb.detect(gridSection, None)
-                #print(type(kp))
+                #print(len(kp))
                 for p in kp:
                     print(type(p))
                     #offset by grid section origin coords
