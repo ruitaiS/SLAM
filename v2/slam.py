@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import cv2
-
+import numpy
 
 class FeatureExtractor(object):
 
@@ -20,8 +20,8 @@ class FeatureExtractor(object):
         rkp = [] #returned keypoints
         for ry in range(0, img.shape[0], img.shape[0]//self.GY):
             for rx in range(0, img.shape[1], img.shape[1]//self.GX):
-                gridSection = img[ry:ry+self.GY, rx:rx+self.GX],
-                #print(gridSection)
+                gridSection = img[ry:ry+self.GY, rx:rx+self.GX]
+                #print(type(gridSection))
                 kp = self.orb.detect(gridSection, None)
                 #print(type(kp))
                 for p in kp:
@@ -31,6 +31,11 @@ class FeatureExtractor(object):
                     rkp.append(p)
         return rkp
 
+    def extract(self, img):
+        print(type(img))
+        kp = self.orb.detect(img, None)
+        return kp
+ 
 fe = FeatureExtractor()
 
 def process_frame(frame):
@@ -45,10 +50,13 @@ def process_frame(frame):
     #has tuple 
     #https://docs.opencv.org/3.4/dc/d84/group__core__basic.html#ga7d080aa40de011e4410bca63385ffe2a
 
+    
+    #kp = fe.extract(frame)
     kp = fe.gridExtract(frame)
 
+    #kp = fe.extract(frame)
     for p in kp:
-        #p is a tuple
+        #print(type(p))
         #round coords to nearest int and then draw
         u,v = map(lambda x: int(round(x)), p.pt)
         print((u,v))
