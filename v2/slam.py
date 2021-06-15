@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 import cv2
-import numpy
+import numpy as np
 
 class FeatureExtractor(object):
 
     #Contains different methods for extracting keypoints from an img
 
     def __init__(self):
-        self.orb = cv2.ORB_create(nfeatures = 100)
+        self.orb = cv2.ORB_create(nfeatures = 1000)
 
         #Used for gridExtract
         self.GX = 100 # X dim of grid square
@@ -39,6 +39,9 @@ class FeatureExtractor(object):
         print(type(img))
         kp = self.orb.detect(img, None)
         return kp
+
+    def gftt(self, img):
+        return cv2.goodFeaturesToTrack(np.mean(img, axis = 2).astype(np.uint8), 3000, qualityLevel=0.01, minDistance = 3)
  
 fe = FeatureExtractor()
 
@@ -56,13 +59,14 @@ def process_frame(frame):
 
     
     #kp = fe.extract(frame)
-    kp = fe.gridExtract(frame)
+    #kp = fe.gridExtract(frame)
+    kp = fe.gftt(frame)
 
     #kp = fe.extract(frame)
     for p in kp:
         #print(type(p))
         #round coords to nearest int and then draw
-        u,v = map(lambda x: int(round(x)), p.pt)
+        u,v = map(lambda x: int(round(x)), p[0])
         print((u,v))
         cv2.circle(frame, (u,v), radius=3, color=(0,255,0), thickness=-1)
 
@@ -70,7 +74,8 @@ def process_frame(frame):
 if __name__ == "__main__" :
     #VideoCapture(fileName) for use on pre-recorded video
     #VideoCapture(0) pulls from webcam
-    cap = cv2.VideoCapture("fpv2.avi")
+    #cap = cv2.VideoCapture("fpv2.avi")
+    cap = cv2.VideoCapture(0)
     while cap.isOpened():
         ret, frame = cap.read()
         if ret == True:
