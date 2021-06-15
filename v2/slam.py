@@ -24,14 +24,12 @@ class FeatureExtractor(object):
         for ry in range(0, img.shape[0], self.GY):
             for rx in range(0, img.shape[1], self.GX):
                 gridSection = img[ry:ry+self.GY, rx:rx+self.GX]
-                print("Grid X Origin: " + str(rx) + "Grid Y Origin: " + str(ry))
-                print("Grid X: " + str(gridSection.shape[0]) + "Grid Y: " + str(gridSection.shape[1]))
+                #print("Grid X Origin: " + str(rx) + "Grid Y Origin: " + str(ry))
+                #print("Grid X: " + str(gridSection.shape[0]) + "Grid Y: " + str(gridSection.shape[1]))
 
-                #print(type(gridSection))
                 kp = self.orb.detect(gridSection, None)
                 #print(len(kp))
                 for p in kp:
-                    print(type(p))
                     #offset by grid section origin coords
                     p.pt = (p.pt[0] + rx, p.pt[1] + ry)
                     rkp.append(p)
