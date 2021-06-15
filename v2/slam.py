@@ -41,7 +41,10 @@ class FeatureExtractor(object):
         return kp
 
     def gftt(self, img):
-        return cv2.goodFeaturesToTrack(np.mean(img, axis = 2).astype(np.uint8), 3000, qualityLevel=0.01, minDistance = 3)
+        feats = cv2.goodFeaturesToTrack(np.mean(img, axis = 2).astype(np.uint8), 3000, qualityLevel=0.01, minDistance = 3)
+        kps = [cv2.KeyPoint(x=f[0][0], y=f[0][1], _size=20) for f in feats]
+        des = self.orb.compute(img, kps)
+        return kps, des
  
 fe = FeatureExtractor()
 
@@ -60,13 +63,14 @@ def process_frame(frame):
     
     #kp = fe.extract(frame)
     #kp = fe.gridExtract(frame)
-    kp = fe.gftt(frame)
+    kps, des = fe.gftt(frame)
 
     #kp = fe.extract(frame)
-    for p in kp:
+    for p in kps:
         #print(type(p))
         #round coords to nearest int and then draw
-        u,v = map(lambda x: int(round(x)), p[0])
+        #If using gftt feats only, use p[0]
+        u,v = map(lambda x: int(round(x)), p.pt)
         print((u,v))
         cv2.circle(frame, (u,v), radius=3, color=(0,255,0), thickness=-1)
 
