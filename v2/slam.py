@@ -9,21 +9,20 @@ class FeatureExtractor(object):
 
     def __init__(self):
         self.orb = cv2.ORB_create(nfeatures = 1000)
-
-        #Used for gridExtract
-        self.GX = 100 # X dim of grid square
-        self.GY = 100 # Y dim of grid square
-
+        self.bf = cv2.BFMatcher()
+        self.last = None
 
     #Subdivides image into grid and extracts keypoints from each
     def gridExtract(self, img):
+        GX = 100 # X dim of grid square
+        GY = 100 # Y dim of grid square
         rkp = [] #returned keypoints
 
         print("Img X: " + str(img.shape[0]) + "Img Y: " + str(img.shape[1]))
 
-        for ry in range(0, img.shape[0], self.GY):
-            for rx in range(0, img.shape[1], self.GX):
-                gridSection = img[ry:ry+self.GY, rx:rx+self.GX]
+        for ry in range(0, img.shape[0], GY):
+            for rx in range(0, img.shape[1], GX):
+                gridSection = img[ry:ry+GY, rx:rx+GX]
                 #print("Grid X Origin: " + str(rx) + "Grid Y Origin: " + str(ry))
                 #print("Grid X: " + str(gridSection.shape[0]) + "Grid Y: " + str(gridSection.shape[1]))
 
@@ -40,10 +39,20 @@ class FeatureExtractor(object):
         kp = self.orb.detect(img, None)
         return kp
 
-    def gftt(self, img):
+    def gftt(self, img):    
         feats = cv2.goodFeaturesToTrack(np.mean(img, axis = 2).astype(np.uint8), 3000, qualityLevel=0.01, minDistance = 3)
-        kps = [cv2.KeyPoint(x=f[0][0], y=f[0][1], _size=20) for f in feats]
+
+        if feats is not None:
+            kps = [cv2.KeyPoint(x=f[0][0], y=f[0][1], _size=20) for f in feats]
+        else:
+            kps = []
         des = self.orb.compute(img, kps)
+
+        #self.last = {'kps': kps, 'des': des} #not totally sure what this line does
+        #if self.last is not None:
+        #    matches = self.bf.match(des, self.last['kps'])
+        #    print(matches)
+
         return kps, des
  
 fe = FeatureExtractor()
@@ -76,9 +85,9 @@ def process_frame(frame):
 
 
 if __name__ == "__main__" :
-    #VideoCapture(fileName) for use on pre-recorded video
-    #VideoCapture(0) pulls from webcam
-    #cap = cv2.VideoCapture("fpv2.avi")
+    #VideoCapture([Filename String]) for pre-recorded video
+    #VideoCapture(0) pulls from integrated webcam
+    #VideoCapture(1) pulls from drone feed if active
     cap = cv2.VideoCapture(0)
     while cap.isOpened():
         ret, frame = cap.read()
