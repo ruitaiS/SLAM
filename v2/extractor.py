@@ -10,7 +10,7 @@ class FeatureExtractor(object):
         self.bf = cv2.BFMatcher()
         self.last = None
 
-    def gftt(self, img):
+    def extract(self, img):
 
         #Feature Extraction
         feats = cv2.goodFeaturesToTrack(np.mean(img, axis = 2).astype(np.uint8), 3000, qualityLevel=0.01, minDistance = 3)
@@ -26,7 +26,6 @@ class FeatureExtractor(object):
         matches = None
         if self.last is not None:
             matches = self.bf.match(des, self.last['des'])
-            print(matches)
         
         self.last = {'kps': kps, 'des': des} #not totally sure what this line does
 
