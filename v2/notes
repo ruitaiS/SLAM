@@ -1,0 +1,9 @@
+    #detectAndCompute() -> list of keypoints, list of descriptors
+    #https://docs.opencv.org/3.4/d0/d13/classcv_1_1Feature2D.html
+
+    #keypoints:
+    #https://docs.opencv.org/3.4/d2/d29/classcv_1_1KeyPoint.html
+
+    #kp.pt is the coordinates of the keypoint (type Point2f)
+    #has tuple 
+    #https://docs.opencv.org/3.4/dc/d84/group__core__basic.html#ga7d080aa40de011e4410bca63385ffe2a
