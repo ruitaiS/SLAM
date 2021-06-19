@@ -8,12 +8,17 @@ from extractor import FeatureExtractor
 fe = FeatureExtractor()
 
 def process_frame(frame):
-    kps, des, matches = fe.extract(frame)
-
-    for p in kps:
-        u,v = map(lambda x: int(round(x)), p.pt)
+    matches = fe.extract(frame)
+    if matches is None:
+        return   
+ 
+    for p1, p2 in matches:
+        u,v = map(lambda x: int(round(x)), p1.pt)
+        s,t = map(lambda x: int(round(x)), p2.pt)
         #print((u,v))
         cv2.circle(frame, (u,v), radius=3, color=(0,255,0), thickness=-1)
+        cv2.circle(frame, (s,t), radius=3, color=(0,0,255), thickness=-1)
+
 
 
 if __name__ == "__main__" :
@@ -32,7 +37,7 @@ if __name__ == "__main__" :
         cap = cv2.VideoCapture(1)
 
     if cap is None or not cap.isOpened():
-        print("Video Error; Defaulting Input to Webcam")
+        print("Video Error; Defaulting to Webcam")
         cap = cv2.VideoCapture(0)
 
     while cap.isOpened():
