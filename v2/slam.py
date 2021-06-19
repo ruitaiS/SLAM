@@ -16,8 +16,13 @@ def process_frame(frame):
         u,v = map(lambda x: int(round(x)), p1.pt)
         s,t = map(lambda x: int(round(x)), p2.pt)
         #print((u,v))
-        cv2.circle(frame, (u,v), radius=3, color=(0,255,0), thickness=-1)
-        cv2.circle(frame, (s,t), radius=3, color=(0,0,255), thickness=-1)
+
+        #Circles on Matched Points
+        #cv2.circle(frame, (u,v), radius=3, color=(0,255,0), thickness=-1)
+        #cv2.circle(frame, (s,t), radius=3, color=(0,0,255), thickness=-1)
+
+        #Line Between Matched Points
+        cv2.line(frame,(u,v),(s,t),(0,255,0),1)
 
 
 
