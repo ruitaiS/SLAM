@@ -6,7 +6,7 @@ class FeatureExtractor(object):
     #Contains different methods for extracting keypoints from an img
 
     def __init__(self):
-        self.orb = cv2.ORB_create(nfeatures = 1000)
+        self.orb = cv2.ORB_create()
         self.bf = cv2.BFMatcher(cv2.NORM_HAMMING)
         self.last = None
 
@@ -36,7 +36,7 @@ class FeatureExtractor(object):
                 #Could we try a version w/ stdev of distance or st?
                 for m,n in matches:
                     if m.distance < 0.75*n.distance:
-                        res.append((kps[m.queryIdx], self.last["kps"][m.trainIdx]))
+                        res.append((kps[m.queryIdx].pt, self.last["kps"][m.trainIdx].pt))
                 
 
                 #res = zip([kps[m.queryIdx] for m in matches], [self.last["kps"][m.trainIdx] for m in matches])
