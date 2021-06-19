@@ -7,7 +7,7 @@ class FeatureExtractor(object):
 
     def __init__(self):
         self.orb = cv2.ORB_create(nfeatures = 1000)
-        self.bf = cv2.BFMatcher()
+        self.bf = cv2.BFMatcher(cv2.NORM_HAMMING)
         self.last = None
 
     def extract(self, img):
@@ -28,8 +28,18 @@ class FeatureExtractor(object):
                 return None
             else:
                 #Generate match pairs between keypoints on current and previous frames
-                matches = self.bf.match(des, self.last['des'])
-                res = zip([kps[m.queryIdx] for m in matches], [self.last["kps"][m.trainIdx] for m in matches])
+                matches = self.bf.knnMatch(des, self.last['des'], k=2) #not sure what k does
+
+                res = []
+        
+                #Ratio Test
+                #Could we try a version w/ stdev of distance or st?
+                for m,n in matches:
+                    if m.distance < 0.75*n.distance:
+                        res.append((kps[m.queryIdx], self.last["kps"][m.trainIdx]))
+                
+
+                #res = zip([kps[m.queryIdx] for m in matches], [self.last["kps"][m.trainIdx] for m in matches])
 
                 #Update last
                 self.last = {'kps': kps, 'des': des}
