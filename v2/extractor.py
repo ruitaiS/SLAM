@@ -1,6 +1,10 @@
 import cv2
 import numpy as np
 
+from skimage.measure import ransac
+from skimage.transform import FundamentalMatrixTransform
+
+
 class FeatureExtractor(object):
 
     #Contains different methods for extracting keypoints from an img
@@ -31,18 +35,23 @@ class FeatureExtractor(object):
                 matches = self.bf.knnMatch(des, self.last['des'], k=2) #not sure what k does
 
                 res = []
+
         
                 #Ratio Test
                 #Could we try a version w/ stdev of distance or st?
                 for m,n in matches:
                     if m.distance < 0.75*n.distance:
                         res.append((kps[m.queryIdx].pt, self.last["kps"][m.trainIdx].pt))
-                
 
-                #res = zip([kps[m.queryIdx] for m in matches], [self.last["kps"][m.trainIdx] for m in matches])
+                res = np.array(res)
+
+                #Filter Matches
+                if len(res[:,0])>8:
+                    model, inliers = ransac((res[:,0], res[:,1]),FundamentalMatrixTransform, min_samples=8, residual_threshold=0.01, max_trials=100)
+                    print(sum(inliers)) 
+                    
 
                 #Update last
                 self.last = {'kps': kps, 'des': des}
-
                 #Return matched points
                 return res
