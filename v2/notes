@@ -1,3 +1,5 @@
+1:25
+
 #detectAndCompute() -> list of keypoints, list of descriptors
 #https://docs.opencv.org/3.4/d0/d13/classcv_1_1Feature2D.html
 

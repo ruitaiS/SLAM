@@ -6,16 +6,25 @@ import numpy as np
 from extractor import FeatureExtractor
  
 fe = FeatureExtractor()
-
 def process_frame(frame):
+
+        
+    def denormalize(pt):
+        return int(round(pt[0] + frame.shape[0]/2)), int(round(pt[1] + frame.shape[1]/2))
+
+
+
     matches = fe.extract(frame)
     if matches is None:
         return   
 
     for p1, p2 in matches:
-        u,v = map(lambda x: int(round(x)), p1)
-        s,t = map(lambda x: int(round(x)), p2)
-        #print((u,v))
+        #u,v = map(lambda x: int(round(x)), p1)
+        #s,t = map(lambda x: int(round(x)), p2)
+   
+        #Denormalize
+        u,v = denormalize(p1)
+        s,t = denormalize(p2)
 
         #Circles on Matched Points
         #cv2.circle(frame, (u,v), radius=3, color=(0,255,0), thickness=-1)

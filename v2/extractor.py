@@ -1,3 +1,4 @@
+import sys
 import cv2
 import numpy as np
 
@@ -43,13 +44,26 @@ class FeatureExtractor(object):
                     if m.distance < 0.75*n.distance:
                         res.append((kps[m.queryIdx].pt, self.last["kps"][m.trainIdx].pt))
 
-                res = np.array(res)
-
                 #Filter Matches
-                if len(res[:,0])>8:
-                    model, inliers = ransac((res[:,0], res[:,1]),FundamentalMatrixTransform, min_samples=8, residual_threshold=0.01, max_trials=100)
-                    print(sum(inliers)) 
-                    
+                if len(res)>8:
+                    res = np.array(res)
+
+                    #Normalize coords
+                    #Denormalized later in slam.py
+                    res[:, :, 0] -= img.shape[0]//2
+                    res[:, :, 1] -= img.shape[1]//2
+
+                    #TODO: Replace with better error handling
+                    #RN it even catches keyboard interrupts
+                    try:
+                        model, inliers = ransac((res[:,0], res[:,1]),FundamentalMatrixTransform, min_samples=8, residual_threshold=1, max_trials=100)
+                        res = res[inliers]
+                    except:
+                        print("Matching error:", sys.exc_info()[0])
+                        #Should we update last or reset it to none in the case of error?
+                        #self.last = {'kps': kps, 'des': des}
+                        self.last = None
+                        return None
 
                 #Update last
                 self.last = {'kps': kps, 'des': des}
