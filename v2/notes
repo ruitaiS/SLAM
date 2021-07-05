@@ -13,3 +13,6 @@
 Using Ratio test as first pass filter for matches
 Then Fundamental matrix:
     https://scikit-image.org/docs/dev/auto_examples/transform/plot_fundamental_matrix.html
+
+#Info Intrinsic Parameters Matrix
+https://en.wikipedia.org/wiki/Camera_resectioning

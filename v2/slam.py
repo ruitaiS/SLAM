@@ -4,15 +4,7 @@ import sys
 import cv2
 import numpy as np
 from extractor import FeatureExtractor
- 
-fe = FeatureExtractor()
 def process_frame(frame):
-
-        
-    def denormalize(pt):
-        return int(round(pt[0] + frame.shape[0]/2)), int(round(pt[1] + frame.shape[1]/2))
-
-
 
     matches = fe.extract(frame)
     if matches is None:
@@ -23,8 +15,8 @@ def process_frame(frame):
         #s,t = map(lambda x: int(round(x)), p2)
    
         #Denormalize
-        u,v = denormalize(p1)
-        s,t = denormalize(p2)
+        u,v = fe.denormalize(p1)
+        s,t = fe.denormalize(p2)
 
         #Circles on Matched Points
         #cv2.circle(frame, (u,v), radius=3, color=(0,255,0), thickness=-1)
@@ -36,6 +28,9 @@ def process_frame(frame):
 
 
 if __name__ == "__main__" :
+ 
+
+
     #VideoCapture([Filename String]) for pre-recorded video
     #VideoCapture(0) pulls from integrated webcam
     #VideoCapture(1) pulls from drone feed if active
@@ -54,6 +49,14 @@ if __name__ == "__main__" :
         print("Video Error; Defaulting to Webcam")
         cap = cv2.VideoCapture(0)
 
+    #Use first frame to init Feature Extractor
+    #F is some kinda parameter in the intrinsic Matrix, not sure
+    fe = FeatureExtractor(cap.read()[1], F=1)
+
+
+   
+
+    #Main Detection Loop
     while cap.isOpened():
         ret, frame = cap.read()
         if ret == True:
