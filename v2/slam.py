@@ -51,6 +51,8 @@ if __name__ == "__main__" :
 
     #Use first frame to init Feature Extractor
     #F is some kinda parameter in the intrinsic Matrix, not sure
+    while(cap.read()[1] is None):
+        print("Waiting for Video")
     fe = FeatureExtractor(cap.read()[1], F=1)
 
 
