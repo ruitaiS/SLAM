@@ -39,7 +39,7 @@ class FeatureExtractor(object):
             return None
         else:
             #Compute Keypoint, Descriptor Pairs
-            kps = [cv2.KeyPoint(x=f[0][0], y=f[0][1], _size=20) for f in feats]
+            kps = [cv2.KeyPoint(x=f[0][0], y=f[0][1], size=20) for f in feats]
             kps, des = self.orb.compute(img, kps)
 
             if self.last is None:
